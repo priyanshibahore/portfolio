@@ -170,6 +170,31 @@
       .skill-pct{font-size:.78rem;font-weight:600;color:var(--purple);text-align:right;margin-top:5px;}
 
       /* GALLERY — clean bento grid */
+      .gallery-filters {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 24px;
+        margin-top: 10px;
+      }
+      .filter-pill {
+        background: transparent;
+        color: var(--text-muted);
+        border: 1.5px solid var(--border);
+        padding: 6px 14px;
+        border-radius: 100px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        cursor: pointer;
+        font-family: inherit;
+        transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .filter-pill:hover, .filter-pill.active {
+        background: var(--purple-soft);
+        color: var(--purple);
+        border-color: var(--purple);
+        transform: translateY(-1px);
+      }
       .gallery-hd{margin-bottom:24px;}
       .gallery-sub-label{font-size:.73rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
       .gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;grid-auto-flow:dense;}
@@ -610,6 +635,14 @@
             <div class="gallery-hd animate">
               <div class="gallery-sub-label">Work Gallery</div>
               <h2 class="sec-title" style="font-size:clamp(1.2rem,2.2vw,1.7rem)">A Glimpse of My Work</h2>
+            </div>
+            
+            <!-- Category Filters -->
+            <div class="gallery-filters animate d1" id="galleryFilters">
+              <button class="filter-pill active" data-filter="all">All</button>
+              <button class="filter-pill" data-filter="UI/UX Design">UI/UX Design</button>
+              <button class="filter-pill" data-filter="Branding">Branding</button>
+              <button class="filter-pill" data-filter="Graphic Design">Graphic Design</button>
             </div>
             <!--
               TO ADD YOUR IMAGES tomorrow:
@@ -1213,12 +1246,16 @@
         });
 
       // DYNAMIC GALLERY LOAD
+      window.allGalleryItems = [];
+      let activeFilter = 'all';
+
       fetch('/api/gallery')
         .then(r => {
           if (r.ok) return r.json();
           throw new Error('API offline');
         })
         .then(items => {
+          window.allGalleryItems = items;
           renderGallery(items);
           localStorage.setItem('portfolioGalleryCache', JSON.stringify(items));
         })
@@ -1230,6 +1267,7 @@
               throw new Error('Static file offline');
             })
             .then(items => {
+              window.allGalleryItems = items;
               renderGallery(items);
               localStorage.setItem('portfolioGalleryCache', JSON.stringify(items));
             })
@@ -1238,13 +1276,32 @@
               const localGallery = localStorage.getItem('portfolioGallery');
               const cachedGallery = localStorage.getItem('portfolioGalleryCache');
               const items = localGallery ? JSON.parse(localGallery) : (cachedGallery ? JSON.parse(cachedGallery) : []);
+              window.allGalleryItems = items;
               renderGallery(items);
             });
         });
 
+      // Category Filters Click Listener
+      document.querySelectorAll('#galleryFilters .filter-pill').forEach(pill => {
+        pill.addEventListener('click', (e) => {
+          document.querySelectorAll('#galleryFilters .filter-pill').forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+          const filter = pill.dataset.filter;
+          activeFilter = filter;
+          
+          if (filter === 'all') {
+            renderGallery(window.allGalleryItems);
+          } else {
+            const filtered = window.allGalleryItems.filter(item => item.category === filter);
+            renderGallery(filtered);
+          }
+        });
+      });
+
       // LIGHTBOX LOGIC
-      let currentGalleryItems = [];
-      let currentGalleryIndex = 0;
+      let currentProjectImages = [];
+      let currentProjectImageIndex = 0;
+      let currentProjectDetails = null;
 
       const lightboxModal = document.getElementById('lightboxModal');
       const lightboxImg = document.getElementById('lightboxImg');
@@ -1255,9 +1312,10 @@
       const lightboxPrev = document.getElementById('lightboxPrev');
       const lightboxNext = document.getElementById('lightboxNext');
 
-      function openLightbox(index, itemsList) {
-        currentGalleryItems = itemsList;
-        currentGalleryIndex = index;
+      function openLightbox(imagesArray, projectObj) {
+        currentProjectImages = imagesArray && imagesArray.length > 0 ? imagesArray : [projectObj.image];
+        currentProjectImageIndex = 0;
+        currentProjectDetails = projectObj;
         updateLightboxContent();
         lightboxModal.classList.add('active');
         document.body.style.overflow = 'hidden'; // Lock background scroll
@@ -1269,31 +1327,31 @@
       }
 
       function updateLightboxContent() {
-        if (!currentGalleryItems || currentGalleryItems.length === 0) return;
-        const item = currentGalleryItems[currentGalleryIndex];
+        if (!currentProjectImages || currentProjectImages.length === 0) return;
+        const imageUrl = currentProjectImages[currentProjectImageIndex];
         
         // Smooth image fade transition
         lightboxImg.style.opacity = '0';
         setTimeout(() => {
-          lightboxImg.src = item.image.startsWith('data:') ? item.image : '/' + item.image;
-          lightboxImg.alt = item.title || 'Project Image';
+          lightboxImg.src = imageUrl.startsWith('data:') ? imageUrl : '/' + imageUrl;
+          lightboxImg.alt = currentProjectDetails.title || 'Project Image';
           lightboxImg.style.opacity = '1';
         }, 150);
 
-        lightboxTitle.textContent = item.title || 'Untitled Project';
-        lightboxDesc.textContent = item.desc || '';
-        lightboxCounter.textContent = `${currentGalleryIndex + 1} / ${currentGalleryItems.length}`;
+        lightboxTitle.textContent = currentProjectDetails.title || 'Untitled Project';
+        lightboxDesc.textContent = currentProjectDetails.desc || '';
+        lightboxCounter.textContent = `${currentProjectImageIndex + 1} / ${currentProjectImages.length}`;
       }
 
       function lightboxNextSlide() {
-        if (currentGalleryItems.length <= 1) return;
-        currentGalleryIndex = (currentGalleryIndex + 1) % currentGalleryItems.length;
+        if (currentProjectImages.length <= 1) return;
+        currentProjectImageIndex = (currentProjectImageIndex + 1) % currentProjectImages.length;
         updateLightboxContent();
       }
 
       function lightboxPrevSlide() {
-        if (currentGalleryItems.length <= 1) return;
-        currentGalleryIndex = (currentGalleryIndex - 1 + currentGalleryItems.length) % currentGalleryItems.length;
+        if (currentProjectImages.length <= 1) return;
+        currentProjectImageIndex = (currentProjectImageIndex - 1 + currentProjectImages.length) % currentProjectImages.length;
         updateLightboxContent();
       }
 
@@ -1339,52 +1397,55 @@
       }, { passive: true });
 
       function renderGallery(items) {
-        if (items && items.length > 0) {
-          const grid = document.querySelector('.gallery-grid');
-          if (grid) {
-            grid.innerHTML = '';
-            items.forEach((item, idx) => {
-              const card = document.createElement('div');
-              
-              // Dynamic Bento grid styling rules
-              let bentoClass = '';
-              if (items.length >= 4) {
-                if (idx === 0) bentoClass = ' bento-wide';
-                else if (idx === 3) bentoClass = ' bento-tall';
-                else if (idx === 5) bentoClass = ' bento-wide';
-              }
-              card.className = `g-item gi${(idx % 8) + 1}${bentoClass}`;
-              
-              const imgUrl = item.image.startsWith('data:') ? item.image : '/' + item.image;
-              card.innerHTML = `
-                <img src="${imgUrl}" alt="${item.title || 'Project'}" loading="lazy">
-                <div class="g-ov">
-                  <div class="g-title">${item.title}</div>
-                  <div style="display: none;">${item.desc}</div>
-                </div>
-              `;
-              
-              card.addEventListener('mouseenter',()=>{
-                const cur=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
-                if(cur && ring) {
-                  cur.style.transform='translate(-50%,-50%) scale(2)';cur.style.background='rgba(123,94,167,.25)';ring.style.transform='translate(-50%,-50%) scale(1.4)';
-                }
-              });
-              card.addEventListener('mouseleave',()=>{
-                const cur=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
-                if(cur && ring) {
-                  cur.style.transform='translate(-50%,-50%) scale(1)';cur.style.background='rgba(123,94,167,.5)';ring.style.transform='translate(-50%,-50%) scale(1)';
-                }
-              });
-              
-              card.addEventListener('click', () => {
-                openLightbox(idx, items);
-              });
-              
-              grid.appendChild(card);
-            });
-          }
+        const grid = document.querySelector('.gallery-grid');
+        if (!grid) return;
+        grid.innerHTML = '';
+        
+        if (!items || items.length === 0) {
+          grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); font-size: 0.9rem; padding: 40px; border: 1.5px dashed var(--border); border-radius: 16px;">No projects found in this category.</div>`;
+          return;
         }
+
+        items.forEach((item, idx) => {
+          const card = document.createElement('div');
+          
+          // Dynamic Bento grid styling rules
+          let bentoClass = '';
+          if (items.length >= 4) {
+            if (idx === 0) bentoClass = ' bento-wide';
+            else if (idx === 3) bentoClass = ' bento-tall';
+            else if (idx === 5) bentoClass = ' bento-wide';
+          }
+          card.className = `g-item gi${(idx % 8) + 1}${bentoClass}`;
+          
+          const imgUrl = item.image.startsWith('data:') ? item.image : '/' + item.image;
+          card.innerHTML = `
+            <img src="${imgUrl}" alt="${item.title || 'Project'}" loading="lazy">
+            <div class="g-ov">
+              <div class="g-title">${item.title}</div>
+              <div style="font-size: 0.72rem; color: var(--purple-light); font-weight: 700; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.05em;">${item.category || ''}</div>
+            </div>
+          `;
+          
+          card.addEventListener('mouseenter',()=>{
+            const cur=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+            if(cur && ring) {
+              cur.style.transform='translate(-50%,-50%) scale(2)';cur.style.background='rgba(123,94,167,.25)';ring.style.transform='translate(-50%,-50%) scale(1.4)';
+            }
+          });
+          card.addEventListener('mouseleave',()=>{
+            const cur=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+            if(cur && ring) {
+              cur.style.transform='translate(-50%,-50%) scale(1)';cur.style.background='rgba(123,94,167,.5)';ring.style.transform='translate(-50%,-50%) scale(1)';
+            }
+          });
+          
+          card.addEventListener('click', () => {
+            openLightbox(item.images, item);
+          });
+          
+          grid.appendChild(card);
+        });
       }
 
       // CONDITIONAL LIVE EDITOR LOADING (Locks visual editing to admin panel link only)

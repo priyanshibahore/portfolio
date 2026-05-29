@@ -337,42 +337,150 @@ async function loadGallery() {
   items.forEach((item, idx) => {
     const card = document.createElement('div');
     card.className = 'gallery-card';
-    card.dataset.imagePath = item.image;
+    card.dataset.projectId = item.id;
     
-    const src = item.image.startsWith('data:') ? item.image : `/${item.image}`;
+    const coverSrc = item.image.startsWith('data:') ? item.image : `/${item.image}`;
+    
+    // Category Selector options
+    const categories = ["UI/UX Design", "Branding", "Graphic Design"];
+    let catOptions = '';
+    categories.forEach(cat => {
+      catOptions += `<option value="${cat}" ${item.category === cat ? 'selected' : ''}>${cat}</option>`;
+    });
+
+    // Render nested images list
+    let imagesHtml = '';
+    const imgList = item.images || [item.image];
+    imgList.forEach(img => {
+      const isrc = img.startsWith('data:') ? img : `/${img}`;
+      imagesHtml += `
+        <div style="position: relative; width: 50px; height: 50px; border-radius: 6px; border: 1px solid var(--border); overflow: hidden; background: #fafaf8;">
+          <img src="${isrc}" style="width: 100%; height: 100%; object-fit: cover;" />
+          <button type="button" class="btn-delete-img" data-img-path="${img}" style="position: absolute; top: 0; right: 0; background: rgba(239, 68, 68, 0.9); color: white; border: none; font-size: 0.78rem; border-radius: 0 0 0 6px; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; line-height: 1;">×</button>
+        </div>
+      `;
+    });
+
+    imagesHtml += `
+      <label for="file-add-${item.id}" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border: 1px dashed var(--purple); border-radius: 6px; cursor: pointer; color: var(--purple); font-size: 1.2rem; background: var(--purple-soft); font-weight: 700; flex-shrink: 0; line-height: 1; transition: all 0.2s;">＋</label>
+      <input type="file" id="file-add-${item.id}" data-project-id="${item.id}" class="project-image-add-input" accept="image/*" style="display: none;" />
+    `;
+
     card.innerHTML = `
-      <img src="${src}" alt="Preview" />
+      <img src="${coverSrc}" alt="Cover Preview" />
       <div class="gallery-card-body">
-        <input type="text" class="gallery-title" placeholder="Project Title" value="${item.title || ''}" />
-        <textarea class="gallery-desc" placeholder="Project Description...">${item.desc || ''}</textarea>
-        <div class="gallery-card-actions">
-          <button type="button" class="btn-danger delete-btn">Delete</button>
+        <div class="form-group" style="margin-bottom: 8px;">
+          <label style="font-size: 0.68rem; margin-bottom: 2px;">Project Title</label>
+          <input type="text" class="gallery-title" placeholder="Project Title" value="${item.title || ''}" style="padding: 8px 12px;" />
+        </div>
+        <div class="form-group" style="margin-bottom: 8px;">
+          <label style="font-size: 0.68rem; margin-bottom: 2px;">Category</label>
+          <select class="gallery-category" style="width: 100%; padding: 8px 12px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); outline: none; font-size: 0.85rem; font-family: inherit; font-weight: 600; color: var(--text); background: white;">
+            ${catOptions}
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label style="font-size: 0.68rem; margin-bottom: 2px;">Project Description</label>
+          <textarea class="gallery-desc" placeholder="Project Description..." style="padding: 8px 12px; height: 60px;">${item.desc || ''}</textarea>
+        </div>
+        
+        <label style="font-size: 0.68rem; margin-bottom: 4px; display: block; font-weight: 700; color: var(--text-muted);">PROJECT IMAGES (${imgList.length})</label>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; align-items: center;" class="project-images-container">
+          ${imagesHtml}
+        </div>
+
+        <div class="gallery-card-actions" style="margin-top: auto; border-top: 1px solid var(--border); padding-top: 10px;">
+          <button type="button" class="btn-danger delete-project-btn" style="padding: 6px 12px; font-size: 0.78rem;">🔴 Delete Project</button>
         </div>
       </div>
     `;
 
-    // Set up individual card delete listener
-    card.querySelector('.delete-btn').addEventListener('click', () => deleteGalleryItem(item.image));
+    // 1. Delete image from project listener
+    card.querySelectorAll('.btn-delete-img').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const imgPath = btn.dataset.imgPath;
+        deleteGalleryItem(imgPath, null);
+      });
+    });
+
+    // 2. Add image to project file change listener
+    card.querySelector('.project-image-add-input').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      const pId = e.target.dataset.projectId;
+      await uploadImageToProject(file, pId);
+    });
+
+    // 3. Delete full project listener
+    card.querySelector('.delete-project-btn').addEventListener('click', () => {
+      deleteGalleryItem(null, item.id);
+    });
     
     galleryGrid.appendChild(card);
   });
 }
 
-// Delete item with LocalStorage fallback
-async function deleteGalleryItem(imagePath) {
-  if (!confirm('Are you sure you want to delete this gallery item? This will also remove the image file from the server.')) return;
+// Upload file directly into a project
+async function uploadImageToProject(file, projectId) {
+  const formData = new FormData();
+  formData.append('gallery', file);
+  formData.append('projectId', projectId);
+
+  try {
+    showToast('Adding image to project...');
+    const res = await fetch('/api/gallery/upload', {
+      method: 'POST',
+      body: formData
+    });
+    
+    if (res.ok) {
+      showToast('Image added to project successfully!');
+      loadGallery();
+      return;
+    }
+  } catch (err) {
+    console.log('Server upload failed, updating project image locally...', err);
+  }
+
+  // Local storage fallback
+  try {
+    showToast('Local Mode: Encoding image...');
+    const base64 = await fileToBase64(file);
+    const localGallery = JSON.parse(localStorage.getItem('portfolioGallery') || '[]');
+    
+    const project = localGallery.find(p => p.id === projectId);
+    if (project) {
+      project.images = (project.images || []).concat([base64]);
+      if (!project.image) project.image = base64;
+      localStorage.setItem('portfolioGallery', JSON.stringify(localGallery));
+      showToast('Image added to project locally! Remember to save.');
+      loadGallery();
+    }
+  } catch (err) {
+    console.error(err);
+    showToast('Failed to add image locally.', 'error');
+  }
+}
+
+// Delete item or project with LocalStorage fallback
+async function deleteGalleryItem(imagePath, projectId) {
+  const msg = projectId 
+    ? 'Are you sure you want to delete this entire project and all its images?' 
+    : 'Are you sure you want to delete this single image from the project?';
+  
+  if (!confirm(msg)) return;
 
   try {
     const res = await fetch('/api/gallery/delete', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ image: imagePath })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ image: imagePath, projectId: projectId })
     });
 
     if (res.ok) {
-      showToast('Gallery item deleted successfully!');
+      showToast('Deletion successful!');
       loadGallery();
       return;
     }
@@ -383,42 +491,69 @@ async function deleteGalleryItem(imagePath) {
   // Offline deletion
   try {
     let localGallery = JSON.parse(localStorage.getItem('portfolioGallery') || '[]');
-    localGallery = localGallery.filter(item => item.image !== imagePath);
+    
+    if (projectId) {
+      localGallery = localGallery.filter(p => p.id !== projectId);
+    } else if (imagePath) {
+      localGallery.forEach(p => {
+        if (p.images && p.images.includes(imagePath)) {
+          p.images = p.images.filter(img => img !== imagePath);
+          if (p.image === imagePath) {
+            p.image = p.images.length > 0 ? p.images[0] : '';
+          }
+        }
+      });
+      localGallery = localGallery.filter(p => p.images && p.images.length > 0);
+    }
+    
     localStorage.setItem('portfolioGallery', JSON.stringify(localGallery));
+    localStorage.setItem('portfolioGalleryCache', JSON.stringify(localGallery));
     
-    let cachedGallery = JSON.parse(localStorage.getItem('portfolioGalleryCache') || '[]');
-    cachedGallery = cachedGallery.filter(item => item.image !== imagePath);
-    localStorage.setItem('portfolioGalleryCache', JSON.stringify(cachedGallery));
-    
-    showToast('Gallery item deleted locally!');
+    showToast('Deleted successfully from local storage!');
     loadGallery();
   } catch (err) {
     console.error(err);
-    showToast('Failed to delete gallery item locally.', 'error');
+    showToast('Failed to perform deletion locally.', 'error');
   }
 }
 
-// Save all gallery titles and descriptions with LocalStorage fallback
+// Save all gallery metadata (titles, descriptions, categories, images)
 saveGalleryBtn.addEventListener('click', async () => {
+  let items = [];
+  try {
+    const res = await fetch('/api/gallery');
+    if (res.ok) {
+      items = await res.json();
+    }
+  } catch (err) {
+    items = JSON.parse(localStorage.getItem('portfolioGallery') || '[]');
+  }
+
   const cards = Array.from(galleryGrid.querySelectorAll('.gallery-card'));
-  const updatedData = cards.map(card => ({
-    image: card.dataset.imagePath,
-    title: card.querySelector('.gallery-title').value.trim(),
-    desc: card.querySelector('.gallery-desc').value.trim()
-  }));
+  const updatedData = cards.map(card => {
+    const pId = card.dataset.projectId;
+    const project = items.find(p => p.id === pId) || {};
+    
+    return {
+      id: pId,
+      title: card.querySelector('.gallery-title').value.trim(),
+      category: card.querySelector('.gallery-category').value,
+      desc: card.querySelector('.gallery-desc').value.trim(),
+      image: project.image || '',
+      images: project.images || []
+    };
+  });
 
   try {
     showToast('Saving gallery metadata...');
     const res = await fetch('/api/gallery/update', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updatedData)
     });
 
     if (res.ok) {
-      showToast('Gallery updated successfully! Refresh your portfolio site.');
+      showToast('Gallery projects updated successfully! Refresh your portfolio site.');
       localStorage.setItem('portfolioGalleryCache', JSON.stringify(updatedData));
       return;
     }
@@ -430,13 +565,12 @@ saveGalleryBtn.addEventListener('click', async () => {
   try {
     localStorage.setItem('portfolioGallery', JSON.stringify(updatedData));
     localStorage.setItem('portfolioGalleryCache', JSON.stringify(updatedData));
-    showToast('Gallery updated locally in your browser! Refresh your portfolio site.');
+    showToast('Gallery projects updated locally in your browser! Refresh your portfolio site.');
   } catch (err) {
     console.error(err);
     showToast('Failed to save gallery changes locally.', 'error');
   }
 });
-
 
 // ==========================================
 // 3. INITIALIZATION ON LOAD

@@ -1,17 +1,23 @@
 [
   {
-    "image": "assets/gallery/1779987497064-185068062.png",
+    "id": "proj-nexar",
     "title": "NEXAR BRAND KIT",
-    "desc": "Add a description..."
+    "desc": "A complete branding system, logo identity, and custom color scheme designed for Nexar digital solutions.",
+    "category": "Branding",
+    "image": "assets/gallery/1779987497064-185068062.png",
+    "images": [
+      "assets/gallery/1779987497064-185068062.png",
+      "assets/gallery/1779988525942-944936101.jpeg"
+    ]
   },
   {
-    "image": "assets/gallery/1779988525942-944936101.jpeg",
-    "title": "New Gallery Item",
-    "desc": "Add a description..."
-  },
-  {
+    "id": "proj-pharma",
+    "title": "PHARMA USER INTERFACE",
+    "desc": "Modern user interface panels, wireframes, and design guidelines for digital pharmaceutical monitoring dashboards.",
+    "category": "UI/UX Design",
     "image": "assets/gallery/1779988777368-898859599.jpeg",
-    "title": "New Gallery Item",
-    "desc": "Add a description..."
+    "images": [
+      "assets/gallery/1779988777368-898859599.jpeg"
+    ]
   }
 ]
