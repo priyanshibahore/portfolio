@@ -828,6 +828,7 @@
         btn.style.opacity = '0.7';
         
         try {
+          // 1. Try local Express API first!
           const res = await fetch('/api/contact', {
             method: 'POST',
             headers: {
@@ -836,25 +837,62 @@
             body: JSON.stringify({ name, email, message })
           });
           
-          const result = await res.json();
+          let result = {};
+          try { result = await res.json(); } catch(e) {}
           
-          if (res.ok) {
-            btn.textContent = '✓ Sent!';
-            btn.style.background = '#22c55e';
-            btn.style.opacity = '1';
-            
-            // Clear inputs
-            nameInput.value = '';
-            emailInput.value = '';
-            messageInput.value = '';
-          } else {
-            throw new Error(result.error || 'Failed to send message');
+          if (!res.ok) {
+            throw new Error(result.error || 'Local API offline');
           }
-        } catch (err) {
-          console.error(err);
-          btn.textContent = '❌ Failed to Send';
-          btn.style.background = '#ef4444';
+          
+          // Successful local API dispatch
+          btn.textContent = '✓ Sent!';
+          btn.style.background = '#22c55e';
           btn.style.opacity = '1';
+          
+          // Clear inputs
+          nameInput.value = '';
+          emailInput.value = '';
+          messageInput.value = '';
+
+        } catch (err) {
+          console.log('Local server contact route offline, falling back to Web3Forms:', err);
+          
+          try {
+            // 2. Post directly to Web3Forms using the user's access key!
+            const wRes = await fetch('https://api.web3forms.com/submit', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+              },
+              body: JSON.stringify({
+                access_key: 'e9364fc5-c77a-469b-857c-5740728410ba',
+                name: name,
+                email: email,
+                message: message,
+                subject: `✦ Portfolio Contact from ${name}`
+              })
+            });
+
+            const wResult = await wRes.json();
+            if (wRes.ok && wResult.success) {
+              btn.textContent = '✓ Sent!';
+              btn.style.background = '#22c55e';
+              btn.style.opacity = '1';
+              
+              // Clear inputs
+              nameInput.value = '';
+              emailInput.value = '';
+              messageInput.value = '';
+            } else {
+              throw new Error(wResult.message || 'Web3Forms submission failed');
+            }
+          } catch (err2) {
+            console.error(err2);
+            btn.textContent = '❌ Failed to Send';
+            btn.style.background = '#ef4444';
+            btn.style.opacity = '1';
+          }
         } finally {
           setTimeout(() => {
             btn.disabled = false;

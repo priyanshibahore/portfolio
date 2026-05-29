@@ -1,23 +1,23 @@
 [
   {
-    "id": "proj-nexar",
-    "title": "NEXAR BRAND KIT",
-    "desc": "A complete branding system, logo identity, and custom color scheme designed for Nexar digital solutions.",
-    "category": "Branding",
-    "image": "assets/gallery/1779987497064-185068062.png",
+    "id": "proj-pharma",
+    "title": "PHARMA USER INTERFACE",
+    "category": "UI/UX Design",
+    "desc": "Modern user interface panels, wireframes, and design guidelines for digital pharmaceutical monitoring dashboards.",
+    "image": "assets/gallery/1779988777368-898859599.jpeg",
     "images": [
-      "assets/gallery/1779987497064-185068062.png",
-      "assets/gallery/1779988525942-944936101.jpeg"
+      "assets/gallery/1779988777368-898859599.jpeg",
+      "assets/gallery/1780066432681-114998953.jpeg"
     ]
   },
   {
-    "id": "proj-pharma",
-    "title": "PHARMA USER INTERFACE",
-    "desc": "Modern user interface panels, wireframes, and design guidelines for digital pharmaceutical monitoring dashboards.",
-    "category": "UI/UX Design",
-    "image": "assets/gallery/1779988777368-898859599.jpeg",
+    "id": "proj-1780066440095",
+    "title": "Health Bridge",
+    "category": "Branding",
+    "desc": "Designed packaging for a pharma company",
+    "image": "assets/gallery/1780066440091-914674863.png",
     "images": [
-      "assets/gallery/1779988777368-898859599.jpeg"
+      "assets/gallery/1780066440091-914674863.png"
     ]
   }
 ]
