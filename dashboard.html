@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard – Priyanshi Bahore Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet" />
+  <style>
+    body {font-family: "Plus Jakarta Sans", sans-serif; background: var(--off-white); margin:0; padding:20px;}
+    h1 {font-size:2rem; margin-bottom:1rem;}
+    .field {margin-bottom:1rem;}
+    label {display:block; margin-bottom:0.3rem; font-weight:600;}
+    input, textarea {width:100%; padding:0.5rem; border:1px solid #ccc; border-radius:4px;}
+    button {padding:0.6rem 1.2rem; background:var(--purple); color:#fff; border:none; border-radius:4px; cursor:pointer;}
+    .preview img, .preview a {margin-top:0.5rem; display:block; max-width:200px;}
+  </style>
+</head>
+<body>
+  <h1>Portfolio Dashboard</h1>
+  <form id="dashboardForm">
+    <div class="field">
+      <label for="nameInput">Name</label>
+      <input type="text" id="nameInput" name="name" placeholder="Priyanshi Bahore" />
+    </div>
+    <div class="field">
+      <label for="roleInput">Role</label>
+      <input type="text" id="roleInput" name="role" placeholder="UI/UX & Graphic Designer" />
+    </div>
+    <div class="field">
+      <label for="descInput">Hero Description</label>
+      <textarea id="descInput" name="desc" rows="3" placeholder="I design intuitive digital experiences …"></textarea>
+    </div>
+    <div class="field">
+      <label for="profileImg">Profile Image</label>
+      <input type="file" id="profileImg" accept="image/*" />
+      <div class="preview" id="profileImgPreview"></div>
+    </div>
+    <div class="field">
+      <label for="resumePdf">Resume (PDF)</label>
+      <input type="file" id="resumePdf" accept="application/pdf" />
+      <div class="preview" id="resumePdfPreview"></div>
+    </div>
+    <button type="submit">Save Changes</button>
+  </form>
+  <script>
+    // Helper to convert file to Base64 string
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    document.getElementById('dashboardForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = {};
+      data.name = document.getElementById('nameInput').value.trim();
+      data.role = document.getElementById('roleInput').value.trim();
+      data.desc = document.getElementById('descInput').value.trim();
+
+      const imgFile = document.getElementById('profileImg').files[0];
+      if (imgFile) {
+        data.profileImg = await fileToBase64(imgFile);
+      } else {
+        const existing = localStorage.getItem('portfolioData');
+        const parsed = existing ? JSON.parse(existing) : {};
+        if (parsed.profileImg) data.profileImg = parsed.profileImg;
+      }
+
+      const pdfFile = document.getElementById('resumePdf').files[0];
+      if (pdfFile) {
+        data.resumePdf = await fileToBase64(pdfFile);
+      } else {
+        const existing = localStorage.getItem('portfolioData');
+        const parsed = existing ? JSON.parse(existing) : {};
+        if (parsed.resumePdf) data.resumePdf = parsed.resumePdf;
+      }
+
+      localStorage.setItem('portfolioData', JSON.stringify(data));
+      alert('Changes saved! Open the main site to see updates.');
+    });
+
+    // Populate form with existing data on load
+    (function populate() {
+      const stored = localStorage.getItem('portfolioData');
+      if (!stored) return;
+      const data = JSON.parse(stored);
+      if (data.name) document.getElementById('nameInput').value = data.name;
+      if (data.role) document.getElementById('roleInput').value = data.role;
+      if (data.desc) document.getElementById('descInput').value = data.desc;
+      if (data.profileImg) {
+        const img = document.createElement('img');
+        img.src = data.profileImg;
+        document.getElementById('profileImgPreview').appendChild(img);
+      }
+      if (data.resumePdf) {
+        const link = document.createElement('a');
+        link.href = data.resumePdf;
+        link.download = 'resume.pdf';
+        link.textContent = 'Current Resume (PDF)';
+        document.getElementById('resumePdfPreview').appendChild(link);
+      }
+    })();
+  </script>
+</body>
+</html>
