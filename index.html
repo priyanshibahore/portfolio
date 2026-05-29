@@ -596,14 +596,26 @@
       </div>
     </section>
 
-    <!-- CASE STUDIES -->
-    <section class="cases" id="cases">
+    <!-- WORK GALLERY -->
+    <section class="gallery-sec" id="work" style="background: var(--bg-card);">
       <div class="inner">
-        <div class="cases-hd animate">
-          <div class="sec-label">Featured Case Studies</div>
-          <h2 class="sec-title">Designing Solutions<br>that make impact.</h2>
+        <div class="gallery-hd animate">
+          <div class="sec-label" id="gallerySecLabel">Work Gallery</div>
+          <h2 class="sec-title" id="gallerySecTitle">Selected Projects</h2>
         </div>
-        <div class="cases-grid" id="casesGrid"></div>
+        
+        <!-- Category Filters -->
+        <div class="gallery-filters animate d1" id="galleryFilters" style="margin-bottom: 34px;">
+          <button class="filter-pill active" data-filter="all">All</button>
+          <button class="filter-pill" data-filter="UI/UX Design">UI/UX Design</button>
+          <button class="filter-pill" data-filter="Branding">Branding</button>
+          <button class="filter-pill" data-filter="Graphic Design">Graphic Design</button>
+        </div>
+        
+        <!-- Gallery Grid (styled as case-cards in 3-column) -->
+        <div class="gallery-grid animate d1">
+          <!-- Dynamically populated by renderGallery -->
+        </div>
       </div>
     </section>
 
@@ -618,7 +630,7 @@
       </div>
     </section>
 
-    <!-- SKILLS + GALLERY -->
+    <!-- SKILLS + FEATURED CASE STUDIES -->
     <section class="skills-sec" id="skills">
       <div class="inner">
         <div class="skills-wrap">
@@ -630,37 +642,14 @@
             </div>
             <div class="skill-cards" id="skillsGrid"></div>
           </div>
-          <!-- Gallery -->
+          <!-- Featured Case Studies (styled as Bento grid) -->
           <div>
-            <div class="gallery-hd animate">
-              <div class="gallery-sub-label">Work Gallery</div>
-              <h2 class="sec-title" style="font-size:clamp(1.2rem,2.2vw,1.7rem)">A Glimpse of My Work</h2>
+            <div class="cases-hd animate">
+              <div class="sec-label">Featured Case Studies</div>
+              <h2 class="sec-title" style="font-size:clamp(1.2rem,2.2vw,1.7rem)">Designing Solutions</h2>
             </div>
-            
-            <!-- Category Filters -->
-            <div class="gallery-filters animate d1" id="galleryFilters">
-              <button class="filter-pill active" data-filter="all">All</button>
-              <button class="filter-pill" data-filter="UI/UX Design">UI/UX Design</button>
-              <button class="filter-pill" data-filter="Branding">Branding</button>
-              <button class="filter-pill" data-filter="Graphic Design">Graphic Design</button>
-            </div>
-            <!--
-              TO ADD YOUR IMAGES tomorrow:
-              Replace each placeholder div inside .g-item with your image like:
-              <div class="g-item">
-                <img src="assets/gallery/img1.jpg" alt="Project name">
-                <div class="g-ov">Project Name</div>
-              </div>
-            -->
-            <div class="gallery-grid animate d1">
-              <div class="g-item gi1"><div class="g-ph">Soon</div><div class="g-ov">Project</div></div>
-              <div class="g-item gi2"><div class="g-ph">Soon</div><div class="g-ov">Project</div></div>
-              <div class="g-item gi3"><div class="g-ph">Soon</div><div class="g-ov">Project</div></div>
-              <div class="g-item gi4"><div class="g-ph">Soon</div><div class="g-ov">Project</div></div>
-              <div class="g-item gi5"><div class="g-ph">Soon</div><div class="g-ov">Project</div></div>
-              <div class="g-item gi6"><div class="g-ph">Soon</div><div class="g-ov">Project</div></div>
-              <div class="g-item gi7"><div class="g-ph">Soon</div><div class="g-ov">Project</div></div>
-              <div class="g-item gi8"><div class="g-ph">Soon</div><div class="g-ov">Project</div></div>
+            <div class="cases-grid animate d1" id="casesGrid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; grid-auto-flow: dense; margin-top: 24px;">
+              <!-- Dynamically populated by renderCases in Bento style -->
             </div>
           </div>
         </div>
@@ -1089,28 +1078,24 @@
         grid.innerHTML = '';
         cases.forEach((c, idx) => {
           const card = document.createElement('div');
-          card.className = `case-card animate d${(idx % 5) + 1}`;
           
-          let imgHtml = '';
-          if (c.image && c.image.trim() !== '') {
-            imgHtml = `<img src="${c.image.startsWith('data:') ? c.image : '/' + c.image}" alt="${c.title}" style="width:100%;height:100%;object-fit:cover;display:block;">`;
-          } else {
-            imgHtml = c.mockHtml || '';
-          }
+          // Dynamic Bento styling for the 3 cases
+          let bentoClass = '';
+          if (idx === 0) bentoClass = ' bento-wide';
+          else if (idx === 1) bentoClass = ' bento-tall';
           
-          const tagsHtml = (c.tags || []).map(t => `<span class="case-tag">${t}</span>`).join('');
+          card.className = `g-item gi${(idx % 8) + 1}${bentoClass} animate d${(idx % 5) + 1}`;
+          
+          const imgUrl = c.image ? (c.image.startsWith('data:') ? c.image : '/' + c.image) : '';
           
           card.innerHTML = `
-            <div class="case-img">
-              <div class="case-img-inner ${c.image ? '' : (c.cbgClass || 'cbg1')}">
-                ${imgHtml}
+            <img src="${imgUrl}" alt="${c.title}" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;">
+            <div class="g-ov" style="padding: 16px; display: flex; flex-direction: column; justify-content: flex-end; background: linear-gradient(to top, rgba(15,15,20,0.85), transparent);">
+              <div class="g-title" style="font-weight: 800; font-size: 1.05rem; font-family: 'Orbitron', sans-serif; color: white;">${c.title}</div>
+              <div class="g-desc" style="font-size: 0.78rem; opacity: 0.9; margin-top: 4px; color: #d1d5db;">${c.desc || ''}</div>
+              <div class="case-tags" style="display: flex; gap: 6px; margin-top: 8px;">
+                ${(c.tags || []).map(t => `<span class="case-tag" style="font-size: 0.62rem; padding: 2px 6px; background: rgba(123,94,167,0.4); color: white; border-radius: 100px;">${t}</span>`).join('')}
               </div>
-              <div class="case-num">${c.num || '0' + (idx + 1)}</div>
-            </div>
-            <div class="case-body">
-              <div class="case-tags">${tagsHtml}</div>
-              <h3 class="case-title">${c.title}</h3>
-              <p class="case-desc">${c.desc}</p>
             </div>
           `;
           grid.appendChild(card);
@@ -1524,22 +1509,22 @@
 
         items.forEach((item, idx) => {
           const card = document.createElement('div');
-          
-          // Dynamic Bento grid styling rules
-          let bentoClass = '';
-          if (items.length >= 4) {
-            if (idx === 0) bentoClass = ' bento-wide';
-            else if (idx === 3) bentoClass = ' bento-tall';
-            else if (idx === 5) bentoClass = ' bento-wide';
-          }
-          card.className = `g-item gi${(idx % 8) + 1}${bentoClass}`;
+          card.className = `case-card animate d${(idx % 5) + 1}`;
           
           const imgUrl = item.image.startsWith('data:') ? item.image : '/' + item.image;
+          const imgHtml = `<img src="${imgUrl}" alt="${item.title || 'Project'}" style="width:100%;height:100%;object-fit:cover;display:block;">`;
+          
           card.innerHTML = `
-            <img src="${imgUrl}" alt="${item.title || 'Project'}" loading="lazy">
-            <div class="g-ov">
-              <div class="g-title">${item.title}</div>
-              <div style="font-size: 0.72rem; color: var(--purple-light); font-weight: 700; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.05em;">${item.category || ''}</div>
+            <div class="case-img">
+              <div class="case-img-inner">
+                ${imgHtml}
+              </div>
+              <div class="case-num">0${idx + 1}</div>
+            </div>
+            <div class="case-body">
+              <div class="case-tags"><span class="case-tag">${item.category || ''}</span></div>
+              <h3 class="case-title">${item.title}</h3>
+              <p class="case-desc">${item.desc || ''}</p>
             </div>
           `;
           
@@ -1562,6 +1547,9 @@
           
           grid.appendChild(card);
         });
+        if (typeof obs !== 'undefined') {
+          grid.querySelectorAll('.animate').forEach(el => obs.observe(el));
+        }
       }
 
       // CONDITIONAL LIVE EDITOR LOADING (Locks visual editing to admin panel link only)

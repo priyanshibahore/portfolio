@@ -2,7 +2,7 @@
   {
     "id": "proj-pharma",
     "title": "PHARMA USER INTERFACE",
-    "category": "UI/UX Design",
+    "category": "Branding",
     "desc": "Modern user interface panels, wireframes, and design guidelines for digital pharmaceutical monitoring dashboards.",
     "image": "assets/gallery/1779988777368-898859599.jpeg",
     "images": [
@@ -11,13 +11,77 @@
     ]
   },
   {
-    "id": "proj-1780066440095",
-    "title": "Health Bridge",
-    "category": "Branding",
-    "desc": "Designed packaging for a pharma company",
-    "image": "assets/gallery/1780066440091-914674863.png",
+    "id": "proj-1780085500853",
+    "title": "Travel Marketing Flyer",
+    "category": "Graphic Design",
+    "desc": "A promotional travel flyer designed to showcase destinations, offers, and booking details through eye-catching visuals and an intuitive layout, helping create a memorable first impression for potential travelers.",
+    "image": "assets/gallery/1780085500792-225683898.jpg",
     "images": [
-      "assets/gallery/1780066440091-914674863.png"
+      "assets/gallery/1780085500792-225683898.jpg",
+      "assets/gallery/1780085500812-770420163.png"
+    ]
+  },
+  {
+    "id": "proj-1780085688244",
+    "title": "TravelTrek | Travel Booking Website UI Design",
+    "category": "UI/UX Design",
+    "desc": "Designed a modern travel booking website focused on helping users discover destinations, compare tour packages, and plan trips effortlessly. The interface combines immersive travel imagery, clear navigation, and promotional sections to create an engaging user experience that inspires exploration and simplifies trip planning.",
+    "image": "assets/gallery/1780085688202-466931885.png",
+    "images": [
+      "assets/gallery/1780085688202-466931885.png",
+      "assets/gallery/1780085728158-106991609.png",
+      "assets/gallery/1780085734781-560716139.png"
+    ]
+  },
+  {
+    "id": "proj-1780086279806",
+    "title": "TrendifyHub | E-Commerce Fashion Website UI Design",
+    "category": "Branding",
+    "desc": "Designed a responsive fashion e-commerce website focused on seamless product discovery and shopping experiences. The interface features organized category navigation, promotional sections, brand showcases, and product listings, creating an intuitive and visually engaging journey for online shoppers.",
+    "image": "assets/gallery/1780086279694-84655464.jpg",
+    "images": [
+      "assets/gallery/1780086279694-84655464.jpg",
+      "assets/gallery/1780086279698-958583168.jpg",
+      "assets/gallery/1780086279759-752282515.jpg"
+    ]
+  },
+  {
+    "id": "proj-1780086426254",
+    "title": "VEDA | Yoga Studio Website UI Design",
+    "category": "UI/UX Design",
+    "desc": "Designed a calming and modern website for a yoga and wellness studio, focused on creating an inviting digital experience for visitors. The interface highlights class offerings, instructor information, events, and contact details through a clean layout, soothing color palette, and wellness-inspired visuals that reflect balance, mindfulness, and healthy living.",
+    "image": "assets/gallery/1780086426232-871008148.jpg",
+    "images": [
+      "assets/gallery/1780086426232-871008148.jpg",
+      "assets/gallery/1780086426244-590066974.jpg",
+      "assets/gallery/1780086426249-233004862.jpg"
+    ]
+  },
+  {
+    "id": "proj-1780086644450",
+    "title": "Noise-Cancelling Headphones | Promotional Carousel Design",
+    "category": "Graphic Design",
+    "desc": "Designed a high-impact social media carousel campaign for premium headphones, showcasing key product features, immersive audio benefits, and promotional offers. The design combines bold typography, dark visual aesthetics, and product-focused layouts to create an engaging advertisement that captures attention and drives customer interest.",
+    "image": "assets/gallery/1780086644410-80275025.jpg",
+    "images": [
+      "assets/gallery/1780086644410-80275025.jpg",
+      "assets/gallery/1780086644416-868422501.jpg",
+      "assets/gallery/1780086644426-186943876.jpg",
+      "assets/gallery/1780086644431-491452759.jpg",
+      "assets/gallery/1780086644438-150868709.png",
+      "assets/gallery/1780086644441-346110584.jpg"
+    ]
+  },
+  {
+    "id": "proj-1780086785698",
+    "title": "Nescafé Gold Blend | Outdoor Advertising Campaign",
+    "category": "Graphic Design",
+    "desc": "Created a premium outdoor advertising design for Nescafé Gold Blend, focusing on product visibility and brand recall across public spaces. The campaign uses warm coffee-inspired tones, dynamic lighting effects, and realistic product presentation to communicate quality, richness, and indulgence. The final artwork was adapted for multiple billboard and transit advertising formats to ensure strong visual impact in real-world environments.",
+    "image": "assets/gallery/1780086785612-213574086.jpg",
+    "images": [
+      "assets/gallery/1780086785612-213574086.jpg",
+      "assets/gallery/1780086785644-563647389.jpg",
+      "assets/gallery/1780086785662-382986876.jpg"
     ]
   }
 ]

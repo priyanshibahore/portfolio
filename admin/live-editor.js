@@ -267,6 +267,8 @@ function activateEditMode() {
     '.sec-label',
     '.c-lbl',
     '.c-val',
+    '.g-title',
+    '.g-desc',
     'footer span'
   ];
   
@@ -603,19 +605,20 @@ document.getElementById('btnEditorSave').addEventListener('click', async () => {
       config.profileImg = config.profileImage;
     }
 
-    // 2. Parse Case Studies from DOM
-    const caseCards = Array.from(document.querySelectorAll('#casesGrid .case-card'));
+    // 2. Parse Case Studies from DOM (Bento Grid layout)
+    const caseCards = Array.from(document.querySelectorAll('#casesGrid .g-item'));
     if (caseCards.length > 0) {
       config.cases = caseCards.map((card, idx) => {
-        const img = card.querySelector('.case-img img');
+        const img = card.querySelector('img');
         const imgUrl = img ? img.getAttribute('src') : '';
+        const titleEl = card.querySelector('.g-title');
+        const descEl = card.querySelector('.g-desc');
         const tags = Array.from(card.querySelectorAll('.case-tag')).map(t => t.textContent.trim());
-        const title = card.querySelector('.case-title') ? card.querySelector('.case-title').textContent.trim() : '';
-        const desc = card.querySelector('.case-desc') ? card.querySelector('.case-desc').textContent.trim() : '';
-        const num = card.querySelector('.case-num') ? card.querySelector('.case-num').textContent.trim() : `0${idx + 1}`;
+        const title = titleEl ? titleEl.textContent.trim() : '';
+        const desc = descEl ? descEl.textContent.trim() : '';
         
         return {
-          num,
+          num: `0${idx + 1}`,
           image: imgUrl.startsWith('/') && !imgUrl.startsWith('data:') ? imgUrl.substring(1) : imgUrl,
           cbgClass: `cbg${(idx % 3) + 1}`,
           tags,
@@ -685,29 +688,31 @@ document.getElementById('btnEditorSave').addEventListener('click', async () => {
         const galleryRes = await fetch('/api/gallery');
         const gallery = await galleryRes.json();
         
-        const galleryItems = Array.from(document.querySelectorAll('.gallery-grid .g-item'));
+        const galleryItems = Array.from(document.querySelectorAll('.gallery-grid .case-card'));
         const updatedGallery = galleryItems.map((card, idx) => {
-          const bg = card.style.background;
+          const img = card.querySelector('.case-img img');
           let imgPath = '';
-          const urlMatch = bg.match(/url\(['"]?([^'"]+)['"]?\)/);
-          if (urlMatch) {
-            imgPath = urlMatch[1].split(location.origin)[1] || urlMatch[1];
-            if (imgPath.startsWith('/')) imgPath = imgPath.substring(1);
+          if (img) {
+            const src = img.getAttribute('src');
+            imgPath = src.startsWith('/') && !src.startsWith('data:') ? src.substring(1) : src;
           } else {
             imgPath = gallery[idx] ? gallery[idx].image : '';
           }
 
-          const ov = card.querySelector('.g-ov');
-          let title = '';
-          let desc = '';
-          if (ov) {
-            const titleEl = ov.querySelector('div:first-child');
-            const descEl = ov.querySelector('div:nth-child(2)');
-            title = titleEl ? titleEl.textContent.trim() : '';
-            desc = descEl ? descEl.textContent.trim() : '';
-          }
+          const titleEl = card.querySelector('.case-title');
+          const descEl = card.querySelector('.case-desc');
+          const title = titleEl ? titleEl.textContent.trim() : '';
+          const desc = descEl ? descEl.textContent.trim() : '';
 
-          return { image: imgPath, title, desc };
+          const original = gallery[idx] || {};
+          return {
+            id: original.id || `proj-${Date.now()}-${idx}`,
+            title: title || original.title || 'Project Title',
+            category: original.category || 'Branding',
+            desc: desc || original.desc || '',
+            image: imgPath || original.image || '',
+            images: original.images || (imgPath ? [imgPath] : [])
+          };
         });
 
         await fetch('/api/gallery/update', {

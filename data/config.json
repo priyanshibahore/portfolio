@@ -3,7 +3,7 @@
   "name": "Priyanshi Bahore",
   "role": "UI/UX & Graphic Designer",
   "profileImage": "assets/hero/1779987449250-642586633.jpg",
-  "resumePdf": "assets/resume/priyanshi-resume.pdf",
+  "resumePdf": "assets/resume/1780081935928-986897732.pdf",
   "aboutText": "I design intuitive digital experiences and impactful visual identities that help brands connect, engage and grow.",
   "desc": "I design intuitive digital experiences and impactful visual identities that help brands connect, engage and grow.",
   "themeColor": "purple",
@@ -117,5 +117,39 @@
       "name": "Test",
       "desc": "Validating with users and iterating for better results."
     }
-  ]
+  ],
+  "heroTag": "Hello, I'm",
+  "heroAvail": "Available for work",
+  "heroBtnPrimary": "View Case Studies →",
+  "heroBtnOutline": "⬇ Download Resume",
+  "btnResumeText": "⬇ Resume",
+  "logoBadge": "PB",
+  "navLinksText": {
+    "home": "Home",
+    "cases": "Case Studies",
+    "experience": "Experience",
+    "skills": "Skills",
+    "process": "Process",
+    "contact": "Contact"
+  },
+  "sectionTitles": {
+    "cases": "Designing Solutionsthat make impact.",
+    "experience": "My Professional Journey",
+    "skills": "What I Do Best",
+    "process": "How I Work",
+    "contact": "Let's build somethingmeaningful together."
+  },
+  "sectionLabels": {
+    "cases": "Featured Case Studies",
+    "experience": "Experience",
+    "skills": "Skills & Tools",
+    "process": "My Design Process",
+    "contact": "Let's Connect"
+  },
+  "contactDetails": {
+    "email": "priyanshipahore@gmail.com",
+    "location": "Khategaon, Dewas, MP",
+    "linkedin": "linkedin.com/in/priyanshi-bahore-749b88281",
+    "behance": "behance.net/priyanshibahore"
+  }
 }
