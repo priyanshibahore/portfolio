@@ -553,7 +553,7 @@
       <div class="hero-bg"><div class="blob1"></div><div class="blob2"></div><div class="hdots"></div></div>
       <div class="hero-in">
         <div>
-          <div class="hero-tag"><div class="tag-dot"></div>Hello, I'm</div>
+          <div class="hero-tag"><div class="tag-dot"></div><span class="hero-tag-text">Hello, I'm</span></div>
           <h1 class="hero-name">Priyanshi <span>Bahore</span></h1>
           <p class="hero-role">UI/UX &amp; Graphic Designer</p>
           <p class="hero-desc">I design intuitive digital experiences and impactful visual identities that help brands connect, engage and grow.</p>
@@ -1236,6 +1236,81 @@
         renderTimeline(cfg.timeline || defaultTimeline);
         renderSkills(cfg.skills || defaultSkills);
         renderProcess(cfg.process || defaultProcess);
+
+        // Dynamic Hero and Navigation Elements
+        if (cfg.heroTag) {
+          const el = document.querySelector('.hero-tag-text');
+          if (el) el.textContent = cfg.heroTag;
+        }
+        if (cfg.heroAvail) {
+          const el = document.querySelector('.hero-avail span');
+          if (el) el.textContent = cfg.heroAvail;
+        }
+        if (cfg.heroBtnPrimary) {
+          const el = document.querySelector('.hero-btns .btn-primary');
+          if (el) el.textContent = cfg.heroBtnPrimary;
+        }
+        if (cfg.heroBtnOutline) {
+          const el = document.querySelector('.hero-btns .btn-outline');
+          if (el) el.textContent = cfg.heroBtnOutline;
+        }
+        if (cfg.btnResumeText) {
+          const el = document.querySelector('.btn-resume');
+          if (el) el.textContent = cfg.btnResumeText;
+        }
+        if (cfg.logoBadge) {
+          const el = document.querySelector('.nav-badge');
+          if (el) el.textContent = cfg.logoBadge;
+        }
+        if (cfg.navLinksText) {
+          for (const id in cfg.navLinksText) {
+            const el = document.querySelector(`.nav-links a[href="#${id}"]`);
+            if (el) el.textContent = cfg.navLinksText[id];
+          }
+        }
+        if (cfg.sectionTitles) {
+          for (const id in cfg.sectionTitles) {
+            const sec = document.getElementById(id);
+            if (sec) {
+              const titleEl = sec.querySelector('.sec-title');
+              if (titleEl) titleEl.textContent = cfg.sectionTitles[id];
+            }
+          }
+        }
+        if (cfg.sectionLabels) {
+          for (const id in cfg.sectionLabels) {
+            const sec = document.getElementById(id);
+            if (sec) {
+              const labelEl = sec.querySelector('.sec-label');
+              if (labelEl) labelEl.textContent = cfg.sectionLabels[id];
+            }
+          }
+        }
+        if (cfg.contactDetails) {
+          const emailRow = document.querySelector('a[href^="mailto:"]');
+          if (emailRow && cfg.contactDetails.email) {
+            emailRow.href = `mailto:${cfg.contactDetails.email}`;
+            const valEl = emailRow.querySelector('.c-val');
+            if (valEl) valEl.textContent = cfg.contactDetails.email;
+          }
+          
+          document.querySelectorAll('.c-row').forEach(row => {
+            const lblEl = row.querySelector('.c-lbl');
+            const valEl = row.querySelector('.c-val');
+            if (lblEl && valEl) {
+              const lbl = lblEl.textContent.trim().toLowerCase();
+              if (lbl === 'location' && cfg.contactDetails.location) {
+                valEl.textContent = cfg.contactDetails.location;
+              } else if (lbl === 'linkedin' && cfg.contactDetails.linkedin) {
+                row.href = cfg.contactDetails.linkedin.startsWith('http') ? cfg.contactDetails.linkedin : `https://${cfg.contactDetails.linkedin}`;
+                valEl.textContent = cfg.contactDetails.linkedin.replace('https://', '').replace('http://', '');
+              } else if (lbl === 'behance' && cfg.contactDetails.behance) {
+                row.href = cfg.contactDetails.behance.startsWith('http') ? cfg.contactDetails.behance : `https://${cfg.contactDetails.behance}`;
+                valEl.textContent = cfg.contactDetails.behance.replace('https://', '').replace('http://', '');
+              }
+            }
+          });
+        }
 
         // Dispatch completion event for the live editor to notice if loaded async
         document.dispatchEvent(new CustomEvent('portfolioDataRendered', { detail: cfg }));

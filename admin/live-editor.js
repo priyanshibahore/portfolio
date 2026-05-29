@@ -239,20 +239,33 @@ function activateEditMode() {
     '.hero-name',
     '.hero-role',
     '.hero-desc',
+    '.hero-tag-text',
+    '.hero-avail span',
+    '.hero-btns .btn-primary',
+    '.hero-btns .btn-outline',
+    '.btn-resume',
+    '.nav-badge',
+    '.nav-links a',
     '.case-title',
     '.case-tag',
     '.case-desc',
+    '.case-num',
+    '.tl-dot',
     '.tl-co',
     '.tl-role',
     '.tl-period',
     '.tl-desc',
+    '.skill-ico',
     '.skill-name',
     '.skill-sub',
     '.skill-pct',
+    '.p-icon',
+    '.p-num',
     '.p-name',
     '.p-desc',
     '.sec-title',
     '.sec-label',
+    '.c-lbl',
     '.c-val',
     'footer span'
   ];
@@ -508,6 +521,73 @@ document.getElementById('btnEditorSave').addEventListener('click', async () => {
       config.aboutText = heroDescEl.textContent.trim();
       config.desc = config.aboutText;
     }
+
+    // Collect new custom visual-editor fields
+    const heroTagTextEl = document.querySelector('.hero-tag-text');
+    if (heroTagTextEl) config.heroTag = heroTagTextEl.textContent.trim();
+
+    const heroAvailTextEl = document.querySelector('.hero-avail span');
+    if (heroAvailTextEl) config.heroAvail = heroAvailTextEl.textContent.trim();
+
+    const heroBtnPrimaryEl = document.querySelector('.hero-btns .btn-primary');
+    if (heroBtnPrimaryEl) config.heroBtnPrimary = heroBtnPrimaryEl.textContent.trim();
+
+    const heroBtnOutlineEl = document.querySelector('.hero-btns .btn-outline');
+    if (heroBtnOutlineEl) config.heroBtnOutline = heroBtnOutlineEl.textContent.trim();
+
+    const btnResumeTextEl = document.querySelector('.btn-resume');
+    if (btnResumeTextEl) config.btnResumeText = btnResumeTextEl.textContent.trim();
+
+    const logoBadgeEl = document.querySelector('.nav-badge');
+    if (logoBadgeEl) config.logoBadge = logoBadgeEl.textContent.trim();
+
+    // Collect navigation link texts
+    config.navLinksText = {};
+    document.querySelectorAll('.nav-links a').forEach(a => {
+      const href = a.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        const id = href.substring(1);
+        config.navLinksText[id] = a.textContent.trim();
+      }
+    });
+
+    // Collect section titles and labels dynamically
+    config.sectionTitles = {};
+    config.sectionLabels = {};
+    const sectionIds = ['about', 'cases', 'experience', 'skills', 'process', 'contact'];
+    sectionIds.forEach(id => {
+      const sec = document.getElementById(id);
+      if (sec) {
+        const titleEl = sec.querySelector('.sec-title');
+        if (titleEl) config.sectionTitles[id] = titleEl.textContent.trim();
+        
+        const labelEl = sec.querySelector('.sec-label');
+        if (labelEl) config.sectionLabels[id] = labelEl.textContent.trim();
+      }
+    });
+
+    // Collect contact details
+    config.contactDetails = {};
+    const emailRow = document.querySelector('a[href^="mailto:"]');
+    if (emailRow) {
+      const valEl = emailRow.querySelector('.c-val');
+      if (valEl) config.contactDetails.email = valEl.textContent.trim();
+    }
+    
+    document.querySelectorAll('.c-row').forEach(row => {
+      const lblEl = row.querySelector('.c-lbl');
+      const valEl = row.querySelector('.c-val');
+      if (lblEl && valEl) {
+        const lbl = lblEl.textContent.trim().toLowerCase();
+        if (lbl === 'location') {
+          config.contactDetails.location = valEl.textContent.trim();
+        } else if (lbl === 'linkedin') {
+          config.contactDetails.linkedin = valEl.textContent.trim();
+        } else if (lbl === 'behance') {
+          config.contactDetails.behance = valEl.textContent.trim();
+        }
+      }
+    });
 
     // Gather selected color theme
     const themeSelect = document.getElementById('themeColorSelect');
