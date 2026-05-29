@@ -1236,6 +1236,9 @@
         renderTimeline(cfg.timeline || defaultTimeline);
         renderSkills(cfg.skills || defaultSkills);
         renderProcess(cfg.process || defaultProcess);
+
+        // Dispatch completion event for the live editor to notice if loaded async
+        document.dispatchEvent(new CustomEvent('portfolioDataRendered', { detail: cfg }));
       }
 
       // FETCH PORTFOLIO DETAILS

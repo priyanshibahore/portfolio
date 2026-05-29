@@ -96,6 +96,11 @@ app.use('/api/gallery', require('./gallery'));
 // Mount Contact Form Router
 app.use('/api/contact', require('./contact'));
 
+// Route to serve the admin preview/editor directly when accessing /admin or /admin/
+app.get(['/admin', '/admin/'], (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'admin', 'admin.html'));
+});
+
 // Fallback to serve index.html for undefined frontend routes
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'index.html'));

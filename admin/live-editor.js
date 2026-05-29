@@ -187,7 +187,8 @@ editorBar.innerHTML = `
       </select>
     </div>
   </div>
-  <div class="editor-actions">
+  <div class="editor-actions" style="display: flex; gap: 10px; align-items: center;">
+    <a href="admin/panel.html" class="btn-editor-cancel" style="border-color: var(--purple-light); color: var(--purple-light); text-decoration: none; padding: 8px 16px; display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 0.85rem; border-radius: 8px; transition: all 0.2s;">📂 Project Dashboard</a>
     <button class="btn-editor-cancel" id="btnEditorCancel">❌ Revert</button>
     <button class="btn-editor-save" id="btnEditorSave">💾 Save Live Changes</button>
   </div>
