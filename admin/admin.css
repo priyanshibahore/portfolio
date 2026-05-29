@@ -365,3 +365,46 @@ textarea:focus {
   transform: translateY(0);
   opacity: 1;
 }
+
+/* Mobile responsiveness adjustments */
+@media (max-width: 600px) {
+  body {
+    padding: 12px 6px;
+  }
+  .admin-container {
+    padding: 20px 12px;
+    border-radius: var(--radius-sm);
+  }
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  header .btn-outline {
+    width: 100%;
+    justify-content: center;
+  }
+  h1 {
+    font-size: 1.6rem;
+  }
+  .card {
+    padding: 16px 12px;
+  }
+  .drop-zone {
+    padding: 24px 12px;
+  }
+  .gallery-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .gallery-card img {
+    height: 120px;
+  }
+  .toast {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    text-align: center;
+  }
+}
