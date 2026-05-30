@@ -533,7 +533,7 @@
         </ul>
         <div class="nav-right">
           <button class="theme-btn" id="themeBtn">🌙</button>
-          <a href="assets/resume/priyanshi-resume.pdf" download class="btn-resume">⬇ Resume</a>
+          <a href="assets/resume/Priyanshi_Bahore_Resume.pdf" target="_blank" class="btn-resume">⬇ Resume</a>
           <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
         </div>
       </div>
@@ -546,7 +546,7 @@
       <a href="#skills" onclick="closeMob()">Skills</a>
       <a href="#process" onclick="closeMob()">Process</a>
       <a href="#contact" onclick="closeMob()">Contact</a>
-      <a href="assets/resume/priyanshi-resume.pdf" download class="btn-primary" style="margin-top:8px">⬇ Download Resume</a>
+      <a href="assets/resume/Priyanshi_Bahore_Resume.pdf" target="_blank" class="btn-primary" style="margin-top:8px">⬇ Download Resume</a>
     </div>
 
     <!-- HERO -->
@@ -560,7 +560,7 @@
           <p class="hero-desc">I design intuitive digital experiences and impactful visual identities that help brands connect, engage and grow.</p>
           <div class="hero-btns">
             <a href="#cases" class="btn-primary">View Case Studies →</a>
-            <a href="assets/resume/priyanshi-resume.pdf" download class="btn-outline">⬇ Download Resume</a>
+            <a href="assets/resume/Priyanshi_Bahore_Resume.pdf" target="_blank" class="btn-outline">⬇ Download Resume</a>
           </div>
           <div class="hero-avail"><div class="avail-dot"></div><span>Available for work</span></div>
         </div>
@@ -747,7 +747,7 @@
             <h2 class="sec-title">Let's build something<br>meaningful together.</h2>
             <p class="contact-desc">Have a project in mind or just want to say hello? I'd love to hear from you. Drop a message and I'll get back to you soon!</p>
             <div class="contact-rows">
-              <a href="mailto:priyanshipahore@gmail.com" class="c-row"><div class="c-ico">✉</div><div><div class="c-lbl">Email</div><div class="c-val">priyanshipahore@gmail.com</div></div></a>
+              <a href="mailto:priyanshipahore@gmail.com" target="_blank" class="c-row"><div class="c-ico">✉</div><div><div class="c-lbl">Email</div><div class="c-val">priyanshipahore@gmail.com</div></div></a>
               <a href="#" class="c-row"><div class="c-ico">📍</div><div><div class="c-lbl">Location</div><div class="c-val">Khategaon, Dewas, MP</div></div></a>
               <a href="https://www.linkedin.com/in/priyanshi-bahore-749b88281/" target="_blank" class="c-row"><div class="c-ico" style="font-weight:800;color:#0077b5;font-size:.82rem">in</div><div><div class="c-lbl">LinkedIn</div><div class="c-val">linkedin.com/in/priyanshi-bahore-749b88281</div></div></a>
               <a href="https://www.behance.net/priyanshibahore" target="_blank" class="c-row"><div class="c-ico" style="font-weight:800;color:#053eff;font-size:.82rem">Bē</div><div><div class="c-lbl">Behance</div><div class="c-val">behance.net/priyanshibahore</div></div></a>
@@ -1266,7 +1266,7 @@
           }
         }
         if (cfg.resumePdf) {
-          document.querySelectorAll('a[download]').forEach(a => {
+          document.querySelectorAll('a[href*="Resume"], a[href*="resume"]').forEach(a => {
             a.href = cfg.resumePdf;
           });
         }

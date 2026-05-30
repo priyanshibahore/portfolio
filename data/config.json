@@ -3,7 +3,7 @@
   "name": "Priyanshi Bahore",
   "role": "UI/UX & Graphic Designer",
   "profileImage": "assets/hero/1779987449250-642586633.jpg",
-  "resumePdf": "assets/resume/1780081935928-986897732.pdf",
+  "resumePdf": "assets/resume/Priyanshi_Bahore_Resume.pdf",
   "aboutText": "I design intuitive digital experiences and impactful visual identities that help brands connect, engage and grow.",
   "desc": "I design intuitive digital experiences and impactful visual identities that help brands connect, engage and grow.",
   "themeColor": "purple",
@@ -26,10 +26,10 @@
       "cbgClass": "cbg2",
       "tags": [
         "UI/UX Design",
-        "E-commerce"
+        "Web Design"
       ],
-      "title": "E-commerce Website Redesign",
-      "desc": "Redesigned an e-commerce website to improve user flow and increase conversions by 35% through better UX and visual hierarchy."
+      "title": "Nexar Studios Website Design",
+      "desc": "Designed and developed the official Nexar Studios website, creating a modern digital experience that showcases immersive technology services through clean layouts, responsive design, and strong visual storytelling."
     },
     {
       "num": "03",
@@ -133,14 +133,12 @@
     "contact": "Contact"
   },
   "sectionTitles": {
-    "cases": "Designing Solutionsthat make impact.",
     "experience": "My Professional Journey",
     "skills": "What I Do Best",
     "process": "How I Work",
     "contact": "Let's build somethingmeaningful together."
   },
   "sectionLabels": {
-    "cases": "Featured Case Studies",
     "experience": "Experience",
     "skills": "Skills & Tools",
     "process": "My Design Process",
