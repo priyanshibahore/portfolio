@@ -525,6 +525,7 @@
         <a href="#home" class="nav-logo"><div class="nav-badge">PB</div>Priyanshi Bahore</a>
         <ul class="nav-links">
           <li><a href="#home" class="active">Home</a></li>
+          <li><a href="#work">Work</a></li>
           <li><a href="#cases">Case Studies</a></li>
           <li><a href="#experience">Experience</a></li>
           <li><a href="#skills">Skills</a></li>
@@ -541,6 +542,7 @@
 
     <div class="mob-menu" id="mobMenu">
       <a href="#home" onclick="closeMob()">Home</a>
+      <a href="#work" onclick="closeMob()">Work</a>
       <a href="#cases" onclick="closeMob()">Case Studies</a>
       <a href="#experience" onclick="closeMob()">Experience</a>
       <a href="#skills" onclick="closeMob()">Skills</a>
@@ -809,7 +811,7 @@
       const nav=document.getElementById('navbar');
       window.addEventListener('scroll',()=>{
         nav.classList.toggle('scrolled',window.scrollY>20);
-        const ids=['home','cases','experience','skills','process','contact'];
+        const ids=['home','work','cases','experience','skills','process','contact'];
         let cur='';
         ids.forEach(id=>{const el=document.getElementById(id);if(el&&window.scrollY>=el.offsetTop-110)cur=id;});
         document.querySelectorAll('.nav-links a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
