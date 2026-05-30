@@ -369,7 +369,7 @@ function openImageUploader(type, index = null) {
           if (data.success) {
             showToastBanner('Profile photo updated in place!');
             const img = document.querySelector('.photo-circle img');
-            if (img) img.src = '/' + data.profileImage;
+            if (img) img.src = data.profileImage;
             return;
           }
         }

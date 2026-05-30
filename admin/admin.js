@@ -58,7 +58,7 @@ async function loadConfig() {
     const profilePreview = document.getElementById('profilePreview');
     const profileImgUrl = data.profileImage || data.profileImg;
     if (profileImgUrl) {
-      const src = profileImgUrl.startsWith('data:') ? profileImgUrl : `/${profileImgUrl}`;
+      const src = profileImgUrl.startsWith('data:') ? profileImgUrl : `${profileImgUrl}`;
       profilePreview.innerHTML = `<img src="${src}" alt="Profile">`;
     } else {
       profilePreview.innerHTML = `<span style="font-size: 1.5rem">👤</span>`;
@@ -66,7 +66,7 @@ async function loadConfig() {
 
     const resumePreview = document.getElementById('resumePreview');
     if (data.resumePdf) {
-      const src = data.resumePdf.startsWith('data:') ? data.resumePdf : `/${data.resumePdf}`;
+      const src = data.resumePdf.startsWith('data:') ? data.resumePdf : `${data.resumePdf}`;
       resumePreview.innerHTML = `<a href="${src}" target="_blank" class="pdf-preview-link">📄 View Resume (PDF)</a>`;
     } else {
       resumePreview.innerHTML = `<span style="font-size: 1.5rem">📄</span>`;
@@ -339,7 +339,7 @@ async function loadGallery() {
     card.className = 'gallery-card';
     card.dataset.projectId = item.id;
     
-    const coverSrc = item.image.startsWith('data:') ? item.image : `/${item.image}`;
+    const coverSrc = item.image.startsWith('data:') ? item.image : `${item.image}`;
     
     // Category Selector options
     const categories = ["UI/UX Design", "Branding", "Graphic Design"];
@@ -352,7 +352,7 @@ async function loadGallery() {
     let imagesHtml = '';
     const imgList = item.images || [item.image];
     imgList.forEach(img => {
-      const isrc = img.startsWith('data:') ? img : `/${img}`;
+      const isrc = img.startsWith('data:') ? img : `${img}`;
       imagesHtml += `
         <div style="position: relative; width: 50px; height: 50px; border-radius: 6px; border: 1px solid var(--border); overflow: hidden; background: #fafaf8;">
           <img src="${isrc}" style="width: 100%; height: 100%; object-fit: cover;" />
