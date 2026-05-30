@@ -313,33 +313,27 @@ function activateEditMode() {
   });
 
   // Inject Gallery Image overlays
-  document.querySelectorAll('.gallery-grid .g-item').forEach((card, idx) => {
-    card.classList.add('image-edit-container');
-    const overlay = document.createElement('div');
-    overlay.className = 'image-edit-overlay';
-    overlay.style.opacity = '0';
-    overlay.style.transition = 'opacity 0.2s';
-    overlay.innerHTML = `
-      <div style="display: flex; flex-direction: column; gap: 8px; align-items: center;">
-        <button class="btn-upload-overlay btn-gallery-upload" data-idx="${idx}">📷 Change Pic</button>
-        <span style="font-size: 0.72rem; color: white; font-weight: bold;">(Hover to edit text below)</span>
-      </div>
-    `;
-    
-    // Manage hover conflicts with default overlay
-    card.appendChild(overlay);
-    card.addEventListener('mouseenter', () => overlay.style.opacity = '1');
-    card.addEventListener('mouseleave', () => overlay.style.opacity = '0');
+  document.querySelectorAll('.gallery-grid .case-card').forEach((card, idx) => {
+    const imgInner = card.querySelector('.case-img-inner');
+    if (imgInner) {
+      imgInner.classList.add('image-edit-container');
+      const overlay = document.createElement('div');
+      overlay.className = 'image-edit-overlay';
+      overlay.innerHTML = `
+        <div style="display: flex; flex-direction: column; gap: 8px; align-items: center;">
+          <button class="btn-upload-overlay btn-gallery-upload" data-idx="${idx}">📷 Change Pic</button>
+        </div>
+      `;
+      imgInner.appendChild(overlay);
+      
+      overlay.querySelector('.btn-gallery-upload').addEventListener('click', (e) => {
+        e.stopPropagation();
+        openImageUploader('gallery', idx);
+      });
+    }
   });
 
-  // Bind gallery image uploads
-  document.querySelectorAll('.btn-gallery-upload').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const idx = btn.dataset.idx;
-      openImageUploader('gallery', idx);
-    });
-  });
+
 
   showToastBanner('Visual Edit Mode active! Click on any text, type your edits, and hit Save.');
 }
@@ -605,14 +599,14 @@ document.getElementById('btnEditorSave').addEventListener('click', async () => {
       config.profileImg = config.profileImage;
     }
 
-    // 2. Parse Case Studies from DOM (Bento Grid layout)
-    const caseCards = Array.from(document.querySelectorAll('#casesGrid .g-item'));
+    // 2. Parse Case Studies from DOM (stacked vertical case-cards)
+    const caseCards = Array.from(document.querySelectorAll('#casesGrid .case-card'));
     if (caseCards.length > 0) {
       config.cases = caseCards.map((card, idx) => {
-        const img = card.querySelector('img');
+        const img = card.querySelector('.case-img img');
         const imgUrl = img ? img.getAttribute('src') : '';
-        const titleEl = card.querySelector('.g-title');
-        const descEl = card.querySelector('.g-desc');
+        const titleEl = card.querySelector('.case-title');
+        const descEl = card.querySelector('.case-desc');
         const tags = Array.from(card.querySelectorAll('.case-tag')).map(t => t.textContent.trim());
         const title = titleEl ? titleEl.textContent.trim() : '';
         const desc = descEl ? descEl.textContent.trim() : '';
